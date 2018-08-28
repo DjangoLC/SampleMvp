@@ -58,11 +58,11 @@ public class MainActivity extends AppCompatActivity implements
                     loadFragment(f);
                     return true;
                 case R.id.navigation_notifications:
-                    if (!map.containsKey("notifications")){
+                    if (!map.containsKey("maps")){
                         f = new thirdFragment();
-                        map.put("notifications",f);
+                        map.put("maps",f);
                     }else{
-                        f = (thirdFragment) map.get("notifications");
+                        f = (thirdFragment) map.get("maps");
                     }
                     loadFragment(f);
                     return true;

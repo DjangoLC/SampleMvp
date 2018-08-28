@@ -28,6 +28,8 @@ public class Utilities {
     private final int MY_PERMISSIONS_REQUEST_READ_INTERNAL_STORAGE=1;
     private final int MY_PERMISSIONS_REQUEST_INTERNET=2;
     private final int MY_PERMISSIONS_REQUEST_WRITE_INTERNAL_STORAGE=3;
+    private final int MY_PERMISSIONS_REQUEST_LOCATION=4;
+    private final int MY_PERMISSIONS_REQUEST_WRITE_COARSE_LOCATION=5;
 
     private Context context;
     private Activity act;
@@ -140,6 +142,22 @@ public class Utilities {
             ActivityCompat.requestPermissions(act,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     MY_PERMISSIONS_REQUEST_WRITE_INTERNAL_STORAGE);
+        }
+
+        boolean hasPermissionLocation = (ContextCompat.checkSelfPermission(context,
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED);
+        if (!hasPermissionLocation) {
+            ActivityCompat.requestPermissions(act,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_LOCATION);
+        }
+
+        boolean hasPermissionCoarseLocation = (ContextCompat.checkSelfPermission(context,
+                Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED);
+        if (!hasPermissionCoarseLocation) {
+            ActivityCompat.requestPermissions(act,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_WRITE_COARSE_LOCATION);
         }
 
     }
