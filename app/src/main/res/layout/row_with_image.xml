@@ -13,13 +13,12 @@
         android:layout_margin="10dp"
         android:background="@color/colorAccent"
         android:text="Download image"
-        android:textColor="@color/common_google_signin_btn_text_dark_default" />
+        android:textColor="@color/white" />
 
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
-        app:srcCompat="@drawable/common_ic_googleplayservices" />
+        android:layout_gravity="center"/>
 
 </LinearLayout>

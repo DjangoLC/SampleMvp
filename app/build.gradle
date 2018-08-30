@@ -51,10 +51,10 @@ dependencies {
 
     //Library Google Maps
     //noinspection GradleCompatible
-    implementation 'com.google.android.gms:play-services-maps:8.4.0'
+    implementation 'com.google.android.gms:play-services-maps:11.8.0'
     //implementation 'com.google.android.gms:play-services-maps:15.0.1'
     //Libarry Location
-    implementation 'com.google.android.gms:play-services-location:8.4.0'
+    implementation 'com.google.android.gms:play-services-location:11.8.0'
     //implementation 'com.google.android.gms:play-services-location:15.0.1'
     //Room dataLive
     def room_version = "1.1.1"
@@ -68,5 +68,10 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation 'com.squareup.retrofit2:converter-scalars:2.4.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
+
+    //Dagger
+    implementation 'com.google.dagger:dagger:2.11'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
+
 
 }

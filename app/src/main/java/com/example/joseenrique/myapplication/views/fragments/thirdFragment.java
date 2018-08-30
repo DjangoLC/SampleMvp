@@ -1,6 +1,8 @@
 package com.example.joseenrique.myapplication.views.fragments;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -18,8 +20,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.joseenrique.myapplication.R;
+import com.example.joseenrique.myapplication.dagger.AndroidApplication;
+import com.example.joseenrique.myapplication.dagger.AndroidComponent;
+import com.example.joseenrique.myapplication.dagger.DependencyInjector;
 import com.example.joseenrique.myapplication.interfaces.MapPresenter;
 import com.example.joseenrique.myapplication.presenters.MapPresenterImpl;
+import com.example.joseenrique.myapplication.tasks.LocationProvider;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -29,10 +35,13 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class thirdFragment extends Fragment implements com.example.joseenrique.myapplication.interfaces.MapView,View.OnClickListener{
+public class thirdFragment extends Fragment implements com.example.joseenrique.myapplication.interfaces.MapView,View.OnClickListener
+                            {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -46,7 +55,7 @@ public class thirdFragment extends Fragment implements com.example.joseenrique.m
     @BindView(R.id.barMap)
     ProgressBar barMap;
 
-
+    private LocationProvider mLocationProvider;
 
     private String mParam1;
     private String mParam2;
@@ -60,9 +69,10 @@ public class thirdFragment extends Fragment implements com.example.joseenrique.m
 
     private View rootView;
 
-    private Context context;
-
-    private LocationManager manager;
+    @Inject
+    Context context;
+    @Inject
+    LocationManager manager;
 
     public thirdFragment() {
         // Required empty public constructor
@@ -84,6 +94,21 @@ public class thirdFragment extends Fragment implements com.example.joseenrique.m
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
     }
 
     @Override
@@ -93,7 +118,6 @@ public class thirdFragment extends Fragment implements com.example.joseenrique.m
         if (null == rootView){
             rootView = inflater.inflate(R.layout.third_fragment, container, false);
             ButterKnife.bind(this,rootView);
-            context = getActivity();
             btn_get_location.setOnClickListener(this);
             presenter = new MapPresenterImpl(this);
             mMapView = (MapView) rootView.findViewById(R.id.mapView);
@@ -102,14 +126,14 @@ public class thirdFragment extends Fragment implements com.example.joseenrique.m
             mMapView.onResume(); // needed to get the map to display immediately
 
             try {
-                MapsInitializer.initialize(getActivity().getApplicationContext());
+                MapsInitializer.initialize(context);
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
             mMapView.getMapAsync(mMap -> {
                 googleMap = mMap;
-
+ 
                 // For showing a move to my location button
                 if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
                         != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(),
@@ -149,6 +173,7 @@ public class thirdFragment extends Fragment implements com.example.joseenrique.m
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        ((AndroidApplication)getActivity().getApplication()).getComponent().inject(this);
         if (context instanceof OnThirdFragmentInteractionListener) {
             mListener = (OnThirdFragmentInteractionListener) context;
         } else {
@@ -156,6 +181,8 @@ public class thirdFragment extends Fragment implements com.example.joseenrique.m
                     + " must implement OnFragmentInteractionListener");
         }
     }
+
+
 
     @Override
     public void onDetach() {
@@ -167,7 +194,7 @@ public class thirdFragment extends Fragment implements com.example.joseenrique.m
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btn_get_location:
-                presenter.setInfo(manager,getActivity());
+                presenter.setInfo(manager,context);
                 break;
 
 
@@ -176,6 +203,7 @@ public class thirdFragment extends Fragment implements com.example.joseenrique.m
                     break;
         }
     }
+
 
     public interface OnThirdFragmentInteractionListener {
         // TODO: Update argument type and name

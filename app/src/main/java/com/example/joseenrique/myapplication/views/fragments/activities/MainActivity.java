@@ -1,5 +1,6 @@
 package com.example.joseenrique.myapplication.views.fragments.activities;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,14 +12,14 @@ import android.view.MenuItem;
 
 import com.example.joseenrique.myapplication.R;
 import com.example.joseenrique.myapplication.Utils.Utilities;
+import com.example.joseenrique.myapplication.dagger.AndroidApplication;
 import com.example.joseenrique.myapplication.views.fragments.firstFragment;
 import com.example.joseenrique.myapplication.views.fragments.secondFragment;
 import com.example.joseenrique.myapplication.views.fragments.thirdFragment;
 
 import java.util.HashMap;
 
-import butterknife.internal.Utils;
-
+import javax.inject.Inject;
 
 public class MainActivity extends AppCompatActivity implements
                                     firstFragment.OnFirstFragmentInteractionListener,
@@ -31,6 +32,9 @@ public class MainActivity extends AppCompatActivity implements
 
     private HashMap map;
 
+    @Inject
+    Context context;
+
     private Fragment f;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -41,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     if (!map.containsKey("home")) {
-                        f = new firstFragment();
+                        f = new firstFragment().newInstance("","");
                         map.put("home", f);
                     } else {
                         f = (firstFragment) map.get("home");
@@ -50,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements
                     return true;
                 case R.id.navigation_dashboard:
                     if (!map.containsKey("dashboard")){
-                        f  = new secondFragment();
+                        f  = new secondFragment().newInstance("","");
                         map.put("dashboard",f);
                     } else{
                         f = (secondFragment) map.get("dashboard");
@@ -59,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements
                     return true;
                 case R.id.navigation_notifications:
                     if (!map.containsKey("maps")){
-                        f = new thirdFragment();
+                        f = new thirdFragment().newInstance("","");
                         map.put("maps",f);
                     }else{
                         f = (thirdFragment) map.get("maps");
@@ -75,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        ((AndroidApplication)getApplication()).getComponent().inject(this);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
@@ -84,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements
         firstFragment f = new firstFragment();
         loadFragment(f);
 
-        Utilities util = new Utilities(this,this);
+        Utilities util = new Utilities(context,this);
         util.checkPermissions();
 
     }

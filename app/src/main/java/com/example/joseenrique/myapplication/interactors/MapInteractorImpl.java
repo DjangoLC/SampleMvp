@@ -7,13 +7,15 @@ import android.util.Log;
 
 import com.example.joseenrique.myapplication.Utils.GpsProvider;
 import com.example.joseenrique.myapplication.interfaces.MapInteractor;
+import com.example.joseenrique.myapplication.tasks.LocationProvider;
 
-public class MapInteractorImpl implements MapInteractor,GpsProvider.listener{
+public class MapInteractorImpl implements MapInteractor,LocationProvider.LocationCallback{
 
 
     private final String TAG = getClass().getSimpleName();
 
     private onDataChanged listener;
+    private LocationProvider locationProvider;
 
     public MapInteractorImpl(onDataChanged listener){
         this.listener = listener;
@@ -21,12 +23,16 @@ public class MapInteractorImpl implements MapInteractor,GpsProvider.listener{
 
     @Override
     public void getCurrentInfMaps(LocationManager manager, Context context) {
-        new GpsProvider(manager,context,this);
+        locationProvider = new LocationProvider(context,this);
+        locationProvider.connect();
     }
 
     @Override
-    public void dataChanged(Location location) {
-        listener.notifyPresenterDataChanged(location);
+    public void handleNewLocation(Location location) {
+        if (location!=null){
+            listener.notifyPresenterDataChanged(location);
+        }
+        locationProvider.disconnect();
         Log.i("MapInteractorImpl() ",String.format("Lat: %s, Long: %s",String.valueOf(location.getLatitude()),String.valueOf(location.getLongitude())));
     }
 

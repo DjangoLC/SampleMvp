@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.example.joseenrique.myapplication.Adapter.AdapterProductos;
 import com.example.joseenrique.myapplication.R;
+import com.example.joseenrique.myapplication.dagger.AndroidApplication;
 import com.example.joseenrique.myapplication.interfaces.MainPresenter;
 import com.example.joseenrique.myapplication.interfaces.MainView;
 import com.example.joseenrique.myapplication.models.ModelsBD.AppDatabase;
@@ -23,6 +24,8 @@ import com.example.joseenrique.myapplication.models.ModelsBD.ModelStockBD;
 import com.example.joseenrique.myapplication.presenters.MainPresenterImpl;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -53,7 +56,8 @@ public class firstFragment extends Fragment implements View.OnClickListener,Main
 
     private MainPresenter presenter;
 
-    private AppDatabase db;
+    @Inject
+    AppDatabase db;
 
     public firstFragment() {
         // Required empty public constructor
@@ -75,8 +79,6 @@ public class firstFragment extends Fragment implements View.OnClickListener,Main
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-        db = AppDatabase.getAppDatabase(getActivity());
 
     }
 
@@ -110,6 +112,7 @@ public class firstFragment extends Fragment implements View.OnClickListener,Main
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        ((AndroidApplication)getActivity().getApplication()).getComponent().inject(this);
         if (context instanceof OnFirstFragmentInteractionListener) {
             mListener = (OnFirstFragmentInteractionListener) context;
         } else {
